@@ -81,10 +81,6 @@ traffic-light-project/
 
 _Developed as part of a software engineering learning path focusing on computer graphics and event-driven programming._
 
-_**preview:**_
-
-
-Uploading Screencast From 2026-04-11 22-09-09.mp4…
-
+---
 
 
