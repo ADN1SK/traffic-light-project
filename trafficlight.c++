@@ -56,16 +56,22 @@ void drawTrafficLight() {
 }
 
 // Update automatic cycling
-void updateLight() {
-    if(paused) return;
-    int currentTime = glutGet(GLUT_ELAPSED_TIME);
-    int elapsed = currentTime - lastChangeTime;
+void updateLight(int value) {
+    if (!paused) {
+        int currentTime = glutGet(GLUT_ELAPSED_TIME);
+        int elapsed = currentTime - lastChangeTime;
 
-    switch(currentLight){
-        case RED: if(elapsed>=redTime){ currentLight=GREEN; lastChangeTime=currentTime;} break;
-        case GREEN: if(elapsed>=greenTime){ currentLight=YELLOW; lastChangeTime=currentTime;} break;
-        case YELLOW: if(elapsed>=yellowTime){ currentLight=RED; lastChangeTime=currentTime;} break;
+        int threshold = (currentLight == RED) ? redTime : (currentLight == GREEN ? greenTime : yellowTime);
+
+        if (elapsed >= threshold) {
+            if (currentLight == RED) currentLight = GREEN;
+            else if (currentLight == GREEN) currentLight = YELLOW;
+            else if (currentLight == YELLOW) currentLight = RED;
+            lastChangeTime = currentTime;
+        }
     }
+    glutPostRedisplay();
+    glutTimerFunc(16, updateLight, 0); // Aim for ~60 FPS update check
 }
 
 // Keyboard control
@@ -112,12 +118,6 @@ void display() {
     glutSwapBuffers();
 }
 
-// Idle callback
-void idle(){
-    updateLight();
-    glutPostRedisplay();
-}
-
 int main(int argc,char** argv){
     glutInit(&argc,argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
@@ -132,7 +132,7 @@ int main(int argc,char** argv){
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard);
     glutMouseFunc(mouse);
-    glutIdleFunc(idle);
+    glutTimerFunc(0, updateLight, 0);
     lastChangeTime = glutGet(GLUT_ELAPSED_TIME);
     glutMainLoop();
     return 0;
