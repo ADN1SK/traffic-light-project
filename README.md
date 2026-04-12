@@ -68,7 +68,7 @@ g++ "trafficlight.c++" -o traffic_light -lGL -lGLU -lglut
 ```bash
 ./traffic_light
 ```
-
+---
 ## 📂 Project Structure
 
 ```text
